@@ -300,11 +300,9 @@ app.post("/booking",(req, res)=>{
                             message: `Seat ${seat_number} is already booked`
                         });
                     }
-                    const booking_id = "RB" + Date.now();
                     const sql=`
                         INSERT INTO bookings
                         (
-                            booking_id,
                             user_id,
                             bus_id,
                             passenger_name,
@@ -322,13 +320,12 @@ app.post("/booking",(req, res)=>{
                             booking_status
                         )
                         VALUES
-                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED')
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED')
                     `;
 
                     connection.query(
                         sql,
                         [
-                            booking_id,
                             user_id,
                             bus_id,
                             passenger_name,
@@ -358,11 +355,11 @@ app.post("/booking",(req, res)=>{
                             }
 
                             console.log("Booking inserted successfully!");
-                            console.log("Booking ID:", booking_id);
+                            console.log("Booking ID:", result.insertId);
                             res.json({
                                 success: true,
                                 message: "Booking successful",
-                                booking_id: booking_id
+                                booking_id: result.insertId
                             });
                         }
                     );

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bus Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="logo">RedBus</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </nav>
+</header>
+<div class="form-container">
+    <h2>Login</h2>
+    <form onsubmit="loginUser(event)">
+        <div class="input-box">
+            <label>Email / phone Number</label>
+            <input type="text" placeholder="Enter email or phone number" required>
+        </div>
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p>
+        Don't have an account?
+        <a href="register.html">Register</a>
+    </p>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

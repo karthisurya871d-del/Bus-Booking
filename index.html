@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>Bus Booking - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        RedBus
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </nav>
+</header>
+<section class="hero">
+    <div class="hero-content">
+        <h1>
+            Book Your Bus Ticket
+        </h1>
+        <p>
+            Travel anywhere, anytime
+        </p>
+        <div class="search-box">
+            <div class="input-box">
+
+                <label for="source">
+                    From
+                </label>
+                <input
+                    type="text"
+                    id="source"
+                    placeholder="Enter departure city"
+                    autocomplete="off"
+                    required>
+            </div>
+            <div class="input-box">
+                <label for="destination">
+                    To
+                </label>
+                <input
+                    type="text"
+                    id="destination"
+                    placeholder="Enter destination city"
+                    autocomplete="off"
+                    required>
+            </div>
+            <div class="input-box">
+                <label for="journeyDate">
+                    Journey Date
+                </label>
+                <input
+                    type="date"
+                    id="journeyDate"
+                    required>
+            </div>
+            <button
+                type="button"
+                onclick="searchBus()">
+                Search Bus
+            </button>
+        </div>
+    </div>
+</section>
+<section class="features">
+    <div class="feature">
+        <h3>
+            Wide Bus Network
+        </h3>
+        <p>
+            Choose from many buses and routes.
+        </p>
+    </div>
+    <div class="feature">
+        <h3>
+            Easy Seat Selection
+        </h3>
+        <p>
+            Select your preferred seat easily.
+        </p>
+    </div>
+    <div class="feature">
+        <h3>
+            Secure Booking
+        </h3>
+        <p>
+            Your booking information is protected.
+        </p>
+    </div>
+</section>
+<footer>
+    <p>
+        © 2026 Bus Booking System
+    </p>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

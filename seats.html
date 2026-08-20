@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>Select Seat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        RedBus
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </nav>
+</header>
+<div class="page-container">
+    <h2>Select Your Seat</h2>
+    <div id="busDetails">
+        <p>
+            Loading bus details...
+        </p>
+    </div>
+    <div class="seat-layout">
+        <div class="driver">
+            🚍 Driver
+        </div>
+        <div
+            class="seats"
+            id="seatContainer">
+            <p>
+                Loading seats...
+            </p>
+        </div>
+    </div>
+    <div class="seat-info">
+        <span>
+            🟩 Available
+        </span>
+        <span>
+            🟥 Booked
+        </span>
+        <span>
+            🟦 Selected
+        </span>
+    </div>
+    <button
+        type="button"
+        onclick="continueToPassenger()">
+        Continue
+    </button>
+</div>
+<script src="script.js"></script>
+<script>
+async function loadSeats(){
+    try{
+        const selectedBusData=localStorage.getItem("selectedBus");
+        if(!selectedBusData){
+            alert("Please select a bus first");
+            window.location.href ="buses.html";
+            return;
+        }
+        const bus=JSON.parse(selectedBusData);
+        const journeyDate=localStorage.getItem("travel_date");
+        console.log("Selected Bus:",bus);
+        console.log("Bus ID:",bus.id);
+        console.log("Journey Date:",journeyDate);
+        if(!journeyDate){
+            alert("Journey date is missing");
+            window.location.href="index.html";
+            return;
+        }
+        document.getElementById("busDetails").innerHTML = `
+            <h3>
+                ${bus.bus_name}
+            </h3>
+            <p>
+                ${bus.bus_type}
+            </p>
+            <p>
+                ${bus.source}
+                →
+                ${bus.destination}
+            </p>
+            <p>
+                Departure:
+                ${bus.departure_time}
+            </p>
+            <p>
+                Arrival:
+                ${bus.arrival_time}
+            </p>
+            <p>
+                Journey Date:
+                ${journeyDate}
+            </p>
+            <p>
+                ₹${bus.price} per seat
+            </p>`;
+        const response = await fetch(
+            `/seats/${bus.id}?date=${encodeURIComponent(journeyDate)}`);
+        if(!response.ok){
+            const errorData=await response.json().catch(() => null);
+            throw new Error(errorData?.message||"Unable to load booked seats");
+        }
+        const bookedSeats=await response.json();
+        console.log("Booked seats:",bookedSeats);
+        createSeats(bookedSeats);
+    }
+    catch(error){
+        console.error("Seat loading error:",error);
+        document.getElementById("seatContainer").innerHTML=`
+            <div class="no-buses">
+                <h3>
+                    Unable to load seats
+                </h3>
+                <p>
+                    ${error.message}
+                </p>
+                <p>
+                    Please check whether the
+                    server is running.
+                </p>
+            </div>`;
+    }
+
+}
+function createSeats(bookedSeats){
+    const seatContainer=document.getElementById("seatContainer");
+    seatContainer.innerHTML= "";
+    const bookedSeatNumbers=bookedSeats.map(seat => String(seat.seat_number));
+    console.log("Booked Seat Numbers:",bookedSeatNumbers);
+    const seats = [
+
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+
+        "D1",
+        "D2",
+        "D3",
+        "D4"
+
+    ];
+    seats.forEach(
+        seatNumber=>{
+            const button=document.createElement("button");
+            button.type="button";
+            button.textContent=seatNumber;
+            button.classList.add("seat");
+            if (bookedSeatNumbers.includes(seatNumber)){
+                button.classList.add("booked");
+                button.disabled = true;
+            }
+            else{
+                button.addEventListener("click",function (){
+                        selectSeat(this);
+                    }
+                );
+            }
+            seatContainer.appendChild(button);
+        }
+    );
+}
+function selectSeat(seat){
+    document.querySelectorAll(".seat").forEach(
+        button=>{
+            button.classList.remove("selected");
+        }
+    );
+    seat.classList.add("selected");
+    localStorage.setItem("selectedSeat",seat.textContent);
+    console.log("Selected Seat:",seat.textContent);
+
+}
+function continueToPassenger(){
+    const selectedSeat=localStorage.getItem("selectedSeat");
+    if (!selectedSeat){
+        alert("Please select a seat");
+        return;
+    }
+    console.log("Continuing with seat:",selectedSeat);
+    window.location.href= "passenger.html";
+}
+loadSeats();
+</script>
+</body>
+</html>

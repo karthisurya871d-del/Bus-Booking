@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Information</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">RedBus</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </nav>
+</header>
+
+<div class="form-container">
+
+    <h2>Passenger Information</h2>
+
+    <form onsubmit="savePassenger(event)">
+        <div class="input-box">
+            <label>Passenger Name</label>
+            <input type="text" placeholder="Enter passenger name" required>
+        </div>
+
+        <div class="input-box">
+            <label>Age</label>
+            <input type="number" placeholder="Enter age" required>
+        </div>
+
+        <div class="input-box">
+            <label>Gender</label>
+
+            <select required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <div class="input-box">
+            <label>phone Number</label>
+            <input type="tel" placeholder="Enter phone number" required>
+        </div>
+
+        <div class="input-box">
+            <label>Email</label>
+            <input type="email" placeholder="Enter email" required>
+        </div>
+
+        <div class="input-box">
+            <label>Boarding Point</label>
+
+            <select required>
+                <option value="">Select Boarding Point</option>
+                <option>Koyambedu</option>
+                <option>Guindy</option>
+                <option>Tambaram</option>
+                <option>Perungalathur</option>
+            </select>
+        </div>
+
+        <div class="input-box">
+            <label>Dropping Point</label>
+
+            <select required>
+                <option value="">Select Dropping Point</option>
+                <option>Electronic City</option>
+                <option>Silk Board</option>
+                <option>Majestic</option>
+                <option>Hebbal</option>
+            </select>
+        </div>
+
+        <button type="submit">
+           Continue
+        </button>
+
+    </form>
+
+</div>
+<script src="script.js"></script>
+
+</body>
+</html>

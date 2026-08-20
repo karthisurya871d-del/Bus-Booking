@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        RedBus
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+<div class="success-container">
+    <div class="success-box">
+        <div class="check">
+            ✓
+        </div>
+        <h1>
+            Booking Confirmed!
+        </h1>
+        <p>
+            Your bus ticket has been successfully booked.
+        </p>
+        <div id="bookingDetails">
+            <p>
+                Loading booking details...
+            </p>
+        </div>
+        <button
+            type="button"onclick="window.location.href='index.html'">
+            Back to Home
+        </button>
+    </div>
+</div>
+<script>
+async function loadBookingDetails(){
+    const bookingDetails=document.getElementById("bookingDetails");
+    try{
+        const bookingId=localStorage.getItem("booking_id");
+        console.log("Booking ID:",bookingId);
+        if (!bookingId){
+            bookingDetails.innerHTML=`
+                <div class="ticket">
+                    <h3>
+                        Booking ID not found
+                    </h3>
+                    <p>
+                        Please complete the booking again.
+                    </p>
+                </div>`;
+            return;
+        }
+        const response=await fetch(`/booking/${encodeURIComponent(bookingId)}`);
+        console.log("Response status:",response.status);
+        if (!response.ok){
+            const errorData=await response.json().catch(() => null);
+            throw new Error(errorData?.message||"Unable to fetch booking details");
+        }
+        const data=await response.json();
+        console.log("Server response:",data);
+        if (!data.success||!data.booking){
+            throw new Error("Booking details were not found");
+        }
+        const booking=data.booking;
+        console.log("Booking:",booking);
+        bookingDetails.innerHTML=`
+            <div class="ticket">
+                <h2>
+                    Bus Ticket
+                </h2>
+                <hr>
+                <p>
+                    <strong>
+                        Booking ID:
+                    </strong>
+                    ${booking.booking_id}
+                </p>
+                <p>
+                    <strong>
+                        Passenger Name:
+                    </strong>
+                    ${booking.passenger_name}
+                </p>
+                <p>
+                    <strong>
+                        Age:
+                    </strong>
+                    ${booking.age}
+                </p>
+                <p>
+                    <strong>
+                        Gender:
+                    </strong>
+                    ${booking.gender}
+                </p>
+                <p>
+                    <strong>
+                        phone:
+                    </strong>
+                    ${booking.phone}
+                </p>
+                <p>
+                    <strong>
+                        Email:
+                    </strong>
+                    ${booking.email}
+                </p>
+                <hr>
+                <p>
+                    <strong>
+                        Bus:
+                    </strong>
+                    ${booking.bus_name}
+                </p>
+                <p>
+                    <strong>
+                        Bus Type:
+                    </strong>
+                    ${booking.bus_type}
+                </p>
+                <p>
+                    <strong>
+                        From:
+                    </strong>
+                    ${booking.source}
+                </p>
+                <p>
+                    <strong>
+                        To:
+                    </strong>
+                    ${booking.destination}
+                </p>
+                <p>
+                    <strong>
+                        Journey Date:
+                    </strong>
+                    ${booking.travel_date}
+                </p>
+                <p>
+                    <strong>
+                        Departure:
+                    </strong>
+                    ${booking.departure_time}
+                </p>
+                <p>
+                    <strong>
+                        Arrival:
+                    </strong>
+                    ${booking.arrival_time}
+                </p>
+                <hr>
+                <p>
+                    <strong>
+                        Boarding Point:
+                    </strong>
+                    ${booking.boarding_point}
+                </p>
+                <p>
+                    <strong>
+                        Dropping Point:
+                    </strong>
+                    ${booking.dropping_point}
+                </p>
+                <p>
+                    <strong>
+                        Seat Number:
+                    </strong>
+                    ${booking.seat_number}
+                </p>
+                <p>
+                    <strong>
+                        Amount:
+                    </strong>
+                    ₹${booking.amount}
+                </p>
+                <p>
+                    <strong>
+                        Booking Status:
+                    </strong>
+                    ${booking.booking_status}
+                </p>
+                <hr>
+                <h3>
+                    ✓ Booking Confirmed
+                </h3>
+            </div>`;
+    }
+    catch (error){
+        console.error("Booking Details Error:",error);
+        bookingDetails.innerHTML=`
+            <div class="ticket">
+                <h3>
+                    Unable to load booking details
+                </h3>
+                <p>
+                    ${error.message}
+                </p>
+            </div>`;
+    }
+}
+loadBookingDetails();
+</script>
+</body>
+</html>

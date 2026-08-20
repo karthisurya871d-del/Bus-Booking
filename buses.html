@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Available Buses</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            RedBus
+        </div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+        </nav>
+    </header>
+    <div class="page-container">
+
+        <h2>Available Buses</h2>
+        <div class="route">
+            <strong id="source">
+                Loading...
+            </strong>
+            <span>→</span>
+            <strong id="destination">
+                Loading...
+            </strong>
+            <span id="journeyDate">
+                Loading...
+            </span>
+        </div>
+        <div id="busList">
+            <p>Loading buses...</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        async function displayBuses(){
+            const busList=document.getElementById("busList");
+            try {
+                const source=localStorage.getItem("source");
+                const destination=localStorage.getItem("destination");
+                const date=localStorage.getItem("travel_date");
+                console.log("Searched Source:", source);
+                console.log("Searched Destination:",destination);
+                console.log("Searched Date:",date);
+                if (!source || !destination){
+                    alert("Please select source and destination");
+                    window.location.href="index.html";
+                    return;
+                }
+                document.getElementById("source").textContent=source;
+                document.getElementById("destination").textContent=destination;
+                if(date){
+                    document.getElementById("journeyDate").textContent=date;
+                } else {
+                    document.getElementById("journeyDate").textContent="Date not selected";
+
+                }
+                const response = await fetch(
+                    `/buses?source=${encodeURIComponent(source)}&destination=${encodeURIComponent(destination)}`);
+                if (!response.ok){
+                    const errorData=await response.json().catch(()=>null);
+                    throw new Error(errorData?.message||"Unable to fetch buses");
+                }
+                const matchingBuses=await response.json();
+                console.log("Matching buses:",matchingBuses);
+                busList.innerHTML="";
+                if (matchingBuses.length===0) {
+                    busList.innerHTML=`
+                        <div class="no-buses">
+                            <h3>
+                                No buses available
+                            </h3>
+                            <p>
+                                No buses available from
+                                <strong>
+                                    ${source}
+                                </strong>
+                                to
+                                <strong>
+                                    ${destination}
+                                </strong>
+                            </p>
+                        </div>`;
+                    return;
+                    }
+                matchingBuses.forEach(bus=>{
+                    const busCard=document.createElement("div");
+                    busCard.className="bus-card";
+                    busCard.innerHTML=`
+                        <div>
+                            <h3>
+                                ${bus.bus_name}
+                            </h3>
+                            <p>
+                                ${bus.bus_type}
+                            </p>
+                        </div>
+                        <div>
+                            <strong>
+                                ${bus.departure_time}
+                            </strong>
+                            <p>
+                                ${bus.source}
+                            </p>
+                        </div>
+                        <div>
+                            <strong>
+                                ${bus.arrival_time}
+                            </strong>
+                            <p>
+                                ${bus.destination}
+                            </p>
+                        </div>
+                        <div>
+                            <strong>
+                                ₹${bus.price}
+                            </strong>
+                            <p>
+                                per seat
+                            </p>
+                        </div>
+                        <button
+                            type="button"
+                            class="select-bus-button">
+                            Select Seat
+                        </button>`;
+                    const button=busCard.querySelector(".select-bus-button");
+                    button.addEventListener("click",function(){
+                            selectBus(bus);
+                        }
+                    );
+                    busList.appendChild(busCard);
+                });
+            }
+            catch (error) {
+                console.error("Bus loading error:",error);
+                busList.innerHTML=`
+                    <div class="no-buses">
+                        <h3>
+                            Unable to load buses
+                        </h3>
+                        <p>
+                            ${error.message}
+                        </p>
+                    </div>`;
+            }
+        }
+        displayBuses();
+    </script>
+</body>
+</html>

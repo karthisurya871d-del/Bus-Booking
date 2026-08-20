@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <title>Booking Summary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        RedBus
+    </div>
+    <nav>
+        <a href="index.html">
+            Home
+        </a>
+        <a href="login.html">
+            Login
+        </a>
+    </nav>
+</header>
+<div class="summary-container">
+    <h2>
+        Booking Summary
+    </h2>
+    <div class="summary-box"
+         id="summaryBox">
+        <p>
+            Loading booking details...
+        </p>
+    </div>
+</div>
+<script src="script.js"></script>
+<script>
+function loadBookingSummary() {
+    const bus=JSON.parse(localStorage.getItem("selectedBus"));
+    const passenger=JSON.parse(localStorage.getItem("passenger"));
+    const seat=localStorage.getItem("selectedSeat");
+    const source=localStorage.getItem("source");
+    const destination=localStorage.getItem("destination");
+    const date=localStorage.getItem("travel_date");
+    if (!bus) {
+        alert("Bus information is missing");
+        window.location.href="buses.html";
+        return;
+    }
+    if (!passenger) {
+        alert("Passenger information is missing");
+        window.location.href="passenger.html";
+        return;
+    }
+    if (!seat) {
+        alert("Please select a seat");
+        window.location.href="seats.html";
+        return;
+    }
+    if (!source||!destination ||!date){
+        alert("Journey information is missing");
+        window.location.href="index.html";
+        return;
+    }
+    document.getElementById("summaryBox").innerHTML=`
+        <h3>
+            Bus Details
+        </h3>
+        <p>
+            <strong>
+                Bus:
+            </strong>
+            ${bus.bus_name}
+        </p>
+        <p>
+            <strong>
+                Bus Type:
+            </strong>
+            ${bus.bus_type}
+        </p>
+        <hr>
+        <h3>
+            Journey Details
+        </h3>
+        <p>
+            <strong>
+                From:
+            </strong>
+            ${source}
+        </p>
+        <p>
+            <strong>
+                To:
+            </strong>
+            ${destination}
+        </p>
+        <p>
+            <strong>
+                Date:
+            </strong>
+            ${date}
+        </p>
+        <p>
+            <strong>
+                Departure:
+            </strong>
+            ${bus.departure_time}
+        </p>
+        <p>
+            <strong>
+                Arrival:
+            </strong>
+            ${bus.arrival_time}
+        </p>
+        <hr>
+        <h3>
+            Seat Details
+        </h3>
+        <p>
+            <strong>
+                Selected Seat:
+            </strong>
+            ${seat}
+        </p>
+        <hr>
+        <h3>
+            Passenger Details
+        </h3>
+        <p>
+            <strong>
+                Name:
+            </strong>
+            ${passenger.name}
+        </p>
+        <p>
+            <strong>
+                Age:
+            </strong>
+            ${passenger.age}
+        </p>
+        <p>
+            <strong>
+                Gender:
+            </strong>
+            ${passenger.gender}
+        </p>
+        <p>
+            <strong>
+                phone:
+            </strong>
+            ${passenger.phone}
+        </p>
+        <p>
+            <strong>
+                Email:
+            </strong>
+            ${passenger.email}
+        </p>
+        <p>
+            <strong>
+                Boarding Point:
+            </strong>
+            ${passenger.boarding}
+        </p>
+        <p>
+            <strong>Dropping Point:</strong>${passenger.dropping}
+        </p>
+        <hr>
+        <div class="total">
+            <strong>Total Amount</strong>
+            <strong>₹${bus.price}</strong>
+        </div>
+        <button
+            type="button"
+            onclick="confirmBooking()">
+            Confirm Booking</button>`;
+}
+loadBookingSummary();
+</script>
+</body>
+</html>

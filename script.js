@@ -80,6 +80,9 @@ function searchBus(){
     localStorage.setItem("source",source);
     localStorage.setItem("destination",destination);
     localStorage.setItem("travel_date",date);
+    localStorage.removeItem("selectedBus");
+    localStorage.removeItem("selectedSeat");
+    localStorage.removeItem("passenger");
     window.location.href ="buses.html";
 }
 async function loadBuses(){
@@ -219,13 +222,10 @@ async function confirmBooking(){
                     body:JSON.stringify(booking)
                 }
             );
-        if(!response.ok){
-            throw new Error(
-                "Server returned error: " +
-                response.status
-            );
-        }
         const data=await response.json();
+        if(!response.ok){
+            throw new Error(data.message || "Booking failed");
+        }
         console.log("Booking server response:",data);
         if(data.success){
             localStorage.setItem("booking_id",data.booking_id);
@@ -236,6 +236,6 @@ async function confirmBooking(){
         }
     }catch(error){
         console.error("Booking Error:",error);
-        alert("Unable to connect to server. " +"Please check whether server.js is running.");
+        alert(error.message || "Unable to complete booking");
     }
 }
